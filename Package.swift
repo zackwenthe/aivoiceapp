@@ -26,6 +26,7 @@ let package = Package(
             ],
             path: "Sources/Dictate",
             resources: [
+                .process("Info.plist"),
                 .process("../../Resources")
             ]
         ),
