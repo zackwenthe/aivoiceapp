@@ -10,8 +10,8 @@ final class WhisperKitEngine: @unchecked Sendable {
     var isAvailable: Bool { whisperKit != nil }
 
     func loadModel() async throws {
-        Logger.transcription.info("Loading WhisperKit model (large-v3-turbo)...")
-        whisperKit = try await WhisperKit(model: "large-v3-turbo")
+        Logger.transcription.info("Loading WhisperKit model (large-v3_turbo)...")
+        whisperKit = try await WhisperKit(model: "large-v3_turbo")
         Logger.transcription.info("WhisperKit model loaded successfully")
     }
 
