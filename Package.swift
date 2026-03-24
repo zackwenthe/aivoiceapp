@@ -26,7 +26,7 @@ let package = Package(
             ],
             path: "Sources/Dictate",
             resources: [
-                .process("../Resources")
+                .process("../../Resources")
             ]
         ),
         .testTarget(
