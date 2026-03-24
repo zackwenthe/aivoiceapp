@@ -23,7 +23,8 @@ final class TextStyler: @unchecked Sendable {
         Logger.styling.info("Loading LLM model: \(modelPath)")
 
         do {
-            let configuration = ModelConfiguration(id: modelPath)
+            let modelURL = URL(fileURLWithPath: modelPath)
+            let configuration = ModelConfiguration(directory: modelURL)
             let container = try await LLMModelFactory.shared.loadContainer(configuration: configuration) { progress in
                 Logger.styling.debug("Model loading progress: \(progress.fractionCompleted)")
             }
