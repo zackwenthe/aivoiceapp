@@ -37,8 +37,8 @@ final class ModelManager {
     }
     
     private let modelsDirectory: URL
-    private var downloadDelegate: ModelDownloadDelegate?
-    private var urlSession: URLSession?
+    nonisolated private var downloadDelegate: ModelDownloadDelegate?
+    nonisolated private var urlSession: URLSession?
     
     init() {
         // Set up models directory in Application Support
