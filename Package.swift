@@ -13,7 +13,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/sindresorhus/KeyboardShortcuts", from: "2.0.0"),
         .package(url: "https://github.com/ml-explore/mlx-swift", from: "0.21.0"),
-        .package(url: "https://github.com/ml-explore/mlx-swift-examples", from: "1.18.0"),
+        .package(url: "https://github.com/ml-explore/mlx-swift-examples", from: "2.21.2"),
     ],
     targets: [
         .executableTarget(
