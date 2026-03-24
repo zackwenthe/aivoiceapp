@@ -24,7 +24,7 @@ let package = Package(
                 .product(name: "MLX", package: "mlx-swift"),
                 .product(name: "MLXLLM", package: "mlx-swift-lm"),
                 .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
-                .product(name: "WhisperKit", package: "WhisperKit"),
+                .product(name: "WhisperKit", package: "whisperkit"),
             ],
             path: "Sources/Dictate",
             resources: [
