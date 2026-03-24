@@ -1,7 +1,7 @@
 import Foundation
 
-struct StylePrompts {
-    static func systemPrompt(for style: TextStyle, customPrompt: String? = nil) -> String {
+public struct StylePrompts {
+    public static func systemPrompt(for style: TextStyle, customPrompt: String? = nil) -> String {
         switch style {
         case .plain:
             return "" // Should never be called for plain
@@ -48,7 +48,7 @@ struct StylePrompts {
         }
     }
 
-    static func formatUserMessage(transcript: String) -> String {
+    public static func formatUserMessage(transcript: String) -> String {
         return "Here is the voice transcript to process:\n\n\(transcript)"
     }
 }

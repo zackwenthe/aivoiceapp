@@ -1,0 +1,3 @@
+import DictateLib
+
+DictateApp.main()

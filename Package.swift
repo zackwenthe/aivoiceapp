@@ -8,7 +8,8 @@ let package = Package(
         .macOS(.v15) // Will target macOS 26 at runtime; SPM doesn't have .v26 yet
     ],
     products: [
-        .executable(name: "Dictate", targets: ["Dictate"])
+        .executable(name: "Dictate", targets: ["Dictate"]),
+        .library(name: "DictateLib", targets: ["DictateLib"]),
     ],
     dependencies: [
         .package(url: "https://github.com/sindresorhus/KeyboardShortcuts", from: "2.0.0"),
@@ -19,6 +20,11 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "Dictate",
+            dependencies: ["DictateLib"],
+            path: "Sources/DictateApp"
+        ),
+        .target(
+            name: "DictateLib",
             dependencies: [
                 "KeyboardShortcuts",
                 .product(name: "MLX", package: "mlx-swift"),
@@ -34,7 +40,7 @@ let package = Package(
         ),
         .testTarget(
             name: "DictateTests",
-            dependencies: ["Dictate"],
+            dependencies: ["DictateLib"],
             path: "Tests/DictateTests"
         ),
     ]

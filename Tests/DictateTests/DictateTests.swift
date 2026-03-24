@@ -1,5 +1,5 @@
 import Testing
-@testable import Dictate
+import DictateLib
 
 @Suite("Dictate Tests")
 struct DictateTests {

@@ -118,7 +118,7 @@ struct ModelSettingsView: View {
                 }
             }
 
-        case .error(let message):
+        case .error(_):
             VStack(spacing: 4) {
                 Image(systemName: "exclamationmark.triangle")
                     .foregroundStyle(.red)

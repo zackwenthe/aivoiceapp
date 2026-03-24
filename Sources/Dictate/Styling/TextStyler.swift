@@ -56,14 +56,17 @@ final class TextStyler: @unchecked Sendable {
 
         let styledText = try await container.perform { context in
             let input = try await context.processor.prepare(input: .init(messages: messages))
-            let result = try MLXLMCommon.generate(input: input, parameters: .init(temperature: 0.3), context: context) { tokens in
-                if tokens.count >= 2048 {
-                    return .stop
+            let stream = try MLXLMCommon.generate(input: input, parameters: .init(temperature: 0.3), context: context)
+            var output = ""
+            for await generation in stream {
+                if let chunk = generation.chunk {
+                    output += chunk
+                    if output.count >= 2048 {
+                        break
+                    }
                 }
-                return .more
             }
-            // Extract the output string inside the perform closure to avoid Sendable issues
-            return result.output.trimmingCharacters(in: .whitespacesAndNewlines)
+            return output.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         Logger.styling.info("Styled text generated: \(styledText.count) characters")
         return styledText

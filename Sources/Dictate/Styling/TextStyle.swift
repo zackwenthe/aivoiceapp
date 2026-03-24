@@ -1,6 +1,6 @@
 import Foundation
 
-enum TextStyle: String, CaseIterable, Codable, Identifiable, Sendable {
+public enum TextStyle: String, CaseIterable, Codable, Identifiable, Sendable {
     case plain
     case simplify
     case structured
@@ -8,9 +8,9 @@ enum TextStyle: String, CaseIterable, Codable, Identifiable, Sendable {
     case bullets
     case custom
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .plain: return "Plain"
         case .simplify: return "Simplify"
@@ -21,7 +21,7 @@ enum TextStyle: String, CaseIterable, Codable, Identifiable, Sendable {
         }
     }
 
-    var description: String {
+    public var description: String {
         switch self {
         case .plain: return "Raw transcript with no modifications"
         case .simplify: return "Clean up grammar, remove filler words"
@@ -32,7 +32,7 @@ enum TextStyle: String, CaseIterable, Codable, Identifiable, Sendable {
         }
     }
 
-    var requiresLLM: Bool {
+    public var requiresLLM: Bool {
         self != .plain
     }
 }

@@ -5,13 +5,14 @@ extension KeyboardShortcuts.Name {
     static let toggleRecording = Self("toggleRecording", default: .init(.r, modifiers: [.option]))
 }
 
-@main
-struct DictateApp: App {
+public struct DictateApp: App {
     @State private var appState = AppState()
     @State private var modelManager = ModelManager()
     @State private var textStyler = TextStyler()
 
-    var body: some Scene {
+    public init() {}
+
+    public var body: some Scene {
         MenuBarExtra("Dictate", systemImage: menuBarIcon) {
             MenuBarView()
                 .environment(appState)
