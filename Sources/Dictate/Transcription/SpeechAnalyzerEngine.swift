@@ -35,7 +35,7 @@ struct SpeechAnalyzerEngine: TranscriptionEngine {
 
         Logger.transcription.info("Starting transcription of \(audioFileURL.lastPathComponent)")
 
-        let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<SFSpeechRecognitionResult, Error>) in
+        let transcript = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
             recognizer.recognitionTask(with: request) { result, error in
                 if let error = error {
                     continuation.resume(throwing: DictateError.transcriptionFailed(error.localizedDescription))
@@ -46,11 +46,12 @@ struct SpeechAnalyzerEngine: TranscriptionEngine {
                     return
                 }
 
-                continuation.resume(returning: result)
+                // Extract the string immediately to avoid sending non-Sendable result across concurrency boundaries
+                let transcribedText = result.bestTranscription.formattedString
+                continuation.resume(returning: transcribedText)
             }
         }
 
-        let transcript = result.bestTranscription.formattedString
         Logger.transcription.info("Transcription complete: \(transcript.count) characters")
         return transcript
     }
