@@ -37,8 +37,8 @@ final class ModelManager {
     }
     
     private let modelsDirectory: URL
-    nonisolated private var downloadDelegate: ModelDownloadDelegate?
-    nonisolated private var urlSession: URLSession?
+    nonisolated private let downloadDelegate: ModelDownloadDelegate
+    nonisolated private let urlSession: URLSession
     
     init() {
         // Set up models directory in Application Support
@@ -48,14 +48,18 @@ final class ModelManager {
         // Create directory if needed
         try? FileManager.default.createDirectory(at: modelsDirectory, withIntermediateDirectories: true)
         
-        // Set up download delegate
-        downloadDelegate = ModelDownloadDelegate(manager: self)
+        // Set up download delegate (must be created before urlSession)
+        let delegate = ModelDownloadDelegate()
+        downloadDelegate = delegate
         
         // Configure URLSession with delegate
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 300 // 5 minutes
         config.timeoutIntervalForResource = 3600 // 1 hour for large downloads
-        urlSession = URLSession(configuration: config, delegate: downloadDelegate, delegateQueue: nil)
+        urlSession = URLSession(configuration: config, delegate: delegate, delegateQueue: nil)
+        
+        // Set the manager reference after initialization
+        delegate.manager = self
         
         // Load saved selection
         selectedModelID = UserDefaults.standard.string(forKey: UserDefaults.Keys.selectedLLMModel)
@@ -167,13 +171,9 @@ final class ModelManager {
     }
     
     private func downloadFile(from url: URL, to destination: URL, modelID: String, fileIndex: Int, totalFiles: Int, optional: Bool = false) async throws {
-        guard let session = urlSession else {
-            throw DictateError.modelDownloadFailed("URLSession not initialized")
-        }
-        
         let (tempURL, response) = try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<(URL, URLResponse), Error>) in
-                let task = session.downloadTask(with: url) { location, response, error in
+                let task = urlSession.downloadTask(with: url) { location, response, error in
                     if let error = error {
                         continuation.resume(throwing: error)
                         return
@@ -187,11 +187,11 @@ final class ModelManager {
                     continuation.resume(returning: (location, response))
                 }
                 
-                downloadDelegate?.registerTask(task, for: modelID)
+                downloadDelegate.registerTask(task, for: modelID)
                 task.resume()
             }
         } onCancel: {
-            downloadDelegate?.cancelDownload(for: modelID)
+            downloadDelegate.cancelDownload(for: modelID)
         }
         
         // Validate response
@@ -219,7 +219,7 @@ final class ModelManager {
     
     func cancelDownload(_ model: ModelInfo) {
         // Cancel any ongoing download for this model
-        downloadDelegate?.cancelDownload(for: model.id)
+        downloadDelegate.cancelDownload(for: model.id)
         downloadStates[model.id] = .notDownloaded
         
         // Clean up partial downloads
@@ -281,12 +281,11 @@ final class ModelManager {
 // MARK: - Download Delegate
 
 private final class ModelDownloadDelegate: NSObject, URLSessionDownloadDelegate, @unchecked Sendable {
-    private weak var manager: ModelManager?
+    weak var manager: ModelManager?
     private var downloadTasks: [URLSessionTask: String] = [:] // Map task to model ID
     private let lock = NSLock()
     
-    init(manager: ModelManager) {
-        self.manager = manager
+    override init() {
         super.init()
     }
     
