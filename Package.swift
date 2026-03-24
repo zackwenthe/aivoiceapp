@@ -12,8 +12,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/sindresorhus/KeyboardShortcuts", from: "2.0.0"),
-        .package(url: "https://github.com/ml-explore/mlx-swift", from: "0.21.0"),
-        .package(url: "https://github.com/ml-explore/mlx-swift-examples", from: "2.21.2"),
+        .package(url: "https://github.com/ml-explore/mlx-swift", from: "0.30.3"),
+        .package(url: "https://github.com/ml-explore/mlx-swift-lm", from: "2.30.3"),
     ],
     targets: [
         .executableTarget(
@@ -21,8 +21,8 @@ let package = Package(
             dependencies: [
                 "KeyboardShortcuts",
                 .product(name: "MLX", package: "mlx-swift"),
-                .product(name: "MLXLLM", package: "mlx-swift-examples"),
-                .product(name: "MLXLMCommon", package: "mlx-swift-examples"),
+                .product(name: "MLXLLM", package: "mlx-swift-lm"),
+                .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
             ],
             path: "Sources/Dictate",
             resources: [
