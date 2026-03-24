@@ -27,8 +27,8 @@ let package = Package(
                 .product(name: "WhisperKit", package: "whisperkit"),
             ],
             path: "Sources/Dictate",
+            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("../../Resources")
             ]
         ),
