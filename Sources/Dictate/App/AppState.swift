@@ -102,6 +102,19 @@ final class AppState {
 
     private func runPipeline(audioURL: URL) async {
         // Step 1: Transcribe
+        guard whisperEngine.isAvailable else {
+            Logger.transcription.error("WhisperKit model not loaded, attempting reload before transcription")
+            do {
+                try await whisperEngine.loadModel()
+            } catch {
+                Logger.transcription.error("Model reload failed: \(error.localizedDescription)")
+                phase = .error("Transcription model not loaded")
+                cleanupAudio(at: audioURL)
+                scheduleResetToIdle()
+                return
+            }
+        }
+
         phase = .transcribing
         let rawText: String
         do {
