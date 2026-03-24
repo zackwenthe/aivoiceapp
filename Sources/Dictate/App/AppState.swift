@@ -35,7 +35,8 @@ final class AppState {
     }
 
     private let audioRecorder = AudioRecorder()
-    private let transcriptionEngine: any TranscriptionEngine = SpeechAnalyzerEngine()
+    private let whisperEngine = WhisperKitEngine()
+    private var transcriptionEngine: any TranscriptionEngine { whisperEngine }
     private let clipboardManager = ClipboardManager()
     private var textStyler: TextStyler?
 
@@ -191,6 +192,15 @@ final class AppState {
 
     func setTextStyler(_ styler: TextStyler) {
         self.textStyler = styler
+    }
+
+    func loadTranscriptionModel() async {
+        do {
+            try await whisperEngine.loadModel()
+            Logger.app.info("WhisperKit transcription model ready")
+        } catch {
+            Logger.app.error("Failed to load WhisperKit model: \(error.localizedDescription)")
+        }
     }
 }
 
