@@ -14,6 +14,7 @@ let package = Package(
         .package(url: "https://github.com/sindresorhus/KeyboardShortcuts", from: "2.0.0"),
         .package(url: "https://github.com/ml-explore/mlx-swift", from: "0.30.3"),
         .package(url: "https://github.com/ml-explore/mlx-swift-lm", from: "2.30.3"),
+        .package(url: "https://github.com/argmaxinc/WhisperKit.git", from: "0.17.0"),
     ],
     targets: [
         .executableTarget(
@@ -23,6 +24,7 @@ let package = Package(
                 .product(name: "MLX", package: "mlx-swift"),
                 .product(name: "MLXLLM", package: "mlx-swift-lm"),
                 .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
+                .product(name: "WhisperKit", package: "WhisperKit"),
             ],
             path: "Sources/Dictate",
             resources: [

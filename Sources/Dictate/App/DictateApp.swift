@@ -20,8 +20,12 @@ struct DictateApp: App {
                     if appState.isFirstLaunch {
                         // Onboarding will be shown via openWindow
                     }
-                    // Load LLM model if one was previously selected
+                    // Load models at startup
                     Task {
+                        // Load WhisperKit transcription model
+                        await appState.loadTranscriptionModel()
+
+                        // Load LLM model if one was previously selected
                         await modelManager.loadSelectedModel(into: textStyler)
                         await MainActor.run {
                             appState.setTextStyler(textStyler)
