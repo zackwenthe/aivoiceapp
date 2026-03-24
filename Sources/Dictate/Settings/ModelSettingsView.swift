@@ -57,6 +57,16 @@ struct ModelSettingsView: View {
             modelAction(for: model)
         }
         .padding(.vertical, 4)
+        .contextMenu {
+            let state = modelManager.downloadStates[model.id] ?? .notDownloaded
+            if state == .downloaded {
+                Button(role: .destructive) {
+                    modelManager.deleteModel(model)
+                } label: {
+                    Label("Delete Model", systemImage: "trash")
+                }
+            }
+        }
     }
 
     @ViewBuilder
@@ -73,8 +83,18 @@ struct ModelSettingsView: View {
 
         case .downloading(let progress):
             VStack(spacing: 4) {
-                ProgressView(value: progress)
-                    .frame(width: 80)
+                HStack(spacing: 8) {
+                    ProgressView(value: progress)
+                        .frame(width: 60)
+                    Button {
+                        modelManager.cancelDownload(model)
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Cancel download")
+                }
                 Text("\(Int(progress * 100))%")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
