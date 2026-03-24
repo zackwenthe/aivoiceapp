@@ -36,7 +36,6 @@ final class AppState {
 
     private let audioRecorder = AudioRecorder()
     private let whisperEngine = WhisperKitEngine()
-    private var transcriptionEngine: any TranscriptionEngine { whisperEngine }
     private let clipboardManager = ClipboardManager()
     private var textStyler: TextStyler?
 
@@ -106,7 +105,7 @@ final class AppState {
         phase = .transcribing
         let rawText: String
         do {
-            rawText = try await transcriptionEngine.transcribe(audioFileURL: audioURL)
+            rawText = try await whisperEngine.transcribe(audioFileURL: audioURL)
             Logger.transcription.info("Transcription complete: \(rawText.prefix(100))...")
         } catch {
             Logger.transcription.error("Transcription failed: \(error.localizedDescription)")
